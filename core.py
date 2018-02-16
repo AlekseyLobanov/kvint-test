@@ -87,7 +87,9 @@ class DialogProcessor(object):
         """
         Обрабатывает текст от uid
         """
-        if uid not in self.machines:
+        
+        # Если пользователь ещё не говорил или уже закончил своё общение
+        if uid not in self.machines or self.machines[uid].state == "success":
             self.machines[uid] = _get_state_machine(uid)
             return STATE_TO_TEXT[self.machines[uid].state]
 
