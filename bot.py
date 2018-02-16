@@ -1,17 +1,29 @@
 # -*- coding: utf-8 -*-
+
+"""
+Модуль взаимодействия с Telegram.
+"""
+
 import os
 import time
 import logging
 
 import telebot
 
+from core import dialog
+
 TELEGRAM_API_TOKEN = os.environ['TELEGRAM_TOKEN']
 bot = telebot.TeleBot(TELEGRAM_API_TOKEN)
 
 
 @bot.message_handler(func=lambda message: True, content_types=['text'])
-def echo_msg(message):
-    bot.send_message(message.chat.id, message.text)
+def process_msg(message):
+    uid = "telegram_{}".format(message.chat.id)
+    
+    bot.send_message(
+        message.chat.id,
+        dialog.proc(uid, message.text)
+    )
 
 
 def init_logging():
