@@ -5,7 +5,6 @@
 """
 
 import os
-import time
 import logging
 
 import telebot
@@ -19,7 +18,7 @@ bot = telebot.TeleBot(TELEGRAM_API_TOKEN)
 @bot.message_handler(func=lambda message: True, content_types=['text'])
 def process_msg(message):
     uid = "telegram_{}".format(message.chat.id)
-    
+
     bot.send_message(
         message.chat.id,
         dialog.proc(uid, message.text)

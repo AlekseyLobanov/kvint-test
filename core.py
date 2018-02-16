@@ -20,7 +20,8 @@ def _normalize_text(text):
     Нормализует текст: приводит к нижнему регистру
     """
     text = text.lower()
-    
+    text = "".join(filter(lambda x: x.isalpha(), text))
+
     if len(text.split(" ")) == 1:
         if "больш" in text:
             return "big"
@@ -31,21 +32,21 @@ def _normalize_text(text):
     return text
 
 
-def _place_order(uid:str):
+def _place_order(uid: str):
     """
     Принимает готовый заказ
     """
-    def _place_order():
+    def _place_order_with_uid():
         print("order from {}".format(uid))
-    
-    return _place_order
+
+    return _place_order_with_uid
 
 
-def _get_state_machine(uid:str):
+def _get_state_machine(uid: str):
     """
     Строит необходимую машину состояний
     """
-        
+
     transitions = [
         {
             'trigger': 'big',
@@ -81,15 +82,15 @@ class DialogProcessor(object):
     """
     def __init__(self):
         self.machines = {}  # на каждый id своя машина состояний
-    
-    def proc(self, uid:str, text:str) -> str:
+
+    def proc(self, uid: str, text: str) -> str:
         """
         Обрабатывает текст от uid
         """
         if uid not in self.machines:
             self.machines[uid] = _get_state_machine(uid)
             return STATE_TO_TEXT[self.machines[uid].state]
-        
+
         try:
             self.machines[uid].trigger(_normalize_text(text))
             return STATE_TO_TEXT[self.machines[uid].state]
@@ -101,7 +102,7 @@ class DialogProcessor(object):
             ))
             return "Переформулируйте, пожалуйста"
 
-    def _get_state(self, uid:str):
+    def _get_state(self, uid: str):
         if uid in self.machines:
             return self.machines[uid].state
         else:
